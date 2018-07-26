@@ -20,7 +20,7 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
 {
-    public class TwistSubscriber : Subscriber<Messages.Geometry.Twist>
+    public class TwistSubscriber : UnitySubscriber<Messages.Geometry.Twist>
     {
         private float previousRealTime;
         private Vector3 linearVelocity;

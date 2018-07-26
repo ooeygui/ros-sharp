@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
 {
-    public class TwistPublisher : Publisher<Messages.Geometry.Twist>
+    public class TwistPublisher : UnityPublisher<Messages.Geometry.Twist>
     {
         private Messages.Geometry.Twist message;
 

@@ -15,7 +15,7 @@ limitations under the License.
 
 namespace RosSharp.RosBridgeClient
 {
-    public class JoyPublisher : Publisher<Messages.Sensor.Joy>
+    public class JoyPublisher : UnityPublisher<Messages.Sensor.Joy>
     {
         private Messages.Sensor.Joy message;
         public string FrameId = "Unity";

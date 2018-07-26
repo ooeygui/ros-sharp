@@ -15,7 +15,7 @@ limitations under the License.
 
 namespace RosSharp.RosBridgeClient
 {
-    public class JointStatePublisher : Publisher<Messages.Sensor.JointState>
+    public class JointStatePublisher : UnityPublisher<Messages.Sensor.JointState>
     {
         private Messages.Sensor.JointState message;        
         public string FrameId = "Unity";

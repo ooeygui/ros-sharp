@@ -22,7 +22,7 @@ namespace RosSharp.RosBridgeClient
     public class RosConnector : MonoBehaviour
     {
         public RosSocket RosSocket { get; private set; }
-        public enum Protocols { WebSocketSharp, WebSocketNET };
+        public enum Protocols { WebSocketSharp, WebSocketNET, WebSocketUWP };
         public Protocols Protocol;
         public string RosBridgeServerUrl = "ws://192.168.0.1:9090";
 
@@ -38,6 +38,8 @@ namespace RosSharp.RosBridgeClient
             {
                 case Protocols.WebSocketSharp:
                     return new RosBridgeClient.Protocols.WebSocketSharpProtocol(RosBridgeServerUrl);
+                case Protocols.WebSocketUWP:
+                    return new RosBridgeClient.Protocols.WebSocketUWPProtocol(RosBridgeServerUrl);
                 default:
                     return new RosBridgeClient.Protocols.WebSocketNetProtocol(RosBridgeServerUrl);
             }

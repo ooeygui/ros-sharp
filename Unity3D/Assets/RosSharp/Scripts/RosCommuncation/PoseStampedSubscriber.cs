@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
 {
-    public class PoseStampedSubscriber : Subscriber<Messages.Geometry.PoseStamped>
+    public class PoseStampedSubscriber : UnitySubscriber<Messages.Geometry.PoseStamped>
     {
         private Vector3 position;
         private Quaternion rotation;

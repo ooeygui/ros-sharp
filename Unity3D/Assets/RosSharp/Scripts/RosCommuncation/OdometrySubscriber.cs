@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace RosSharp.RosBridgeClient
 {
-    public class OdometrySubscriber : Subscriber<Messages.Navigation.Odometry>
+    public class OdometrySubscriber : UnitySubscriber<Messages.Navigation.Odometry>
     {
         private Vector3 position;
         private Quaternion rotation;

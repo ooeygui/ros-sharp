@@ -22,7 +22,7 @@ using UnityEngine;
 namespace RosSharp.RosBridgeClient
 {
 
-    public class ImagePublisher : Publisher<Messages.Sensor.CompressedImage>
+    public class ImagePublisher : UnityPublisher<Messages.Sensor.CompressedImage>
     {
         public string FrameId = "Camera";
         public Camera ImageCamera;
