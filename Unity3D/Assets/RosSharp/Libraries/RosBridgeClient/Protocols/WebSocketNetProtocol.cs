@@ -1,5 +1,4 @@
-﻿/*
-© Siemens AG, 2017-2018
+﻿/*© Siemens AG, 2017-2018
 Author: Dr. Martin Bischoff (martin.bischoff@siemens.com)
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,18 +14,17 @@ limitations under the License.
 
 // this class (System.Net.WebSockets) requires .NET 4.5+ to compile and Windows 8+ to work
 
-using System;
 #if !WINDOWS_UWP
+using System;
 using System.IO;
 using System.Net.WebSockets;
-using System.Threading; 
-#endif
+using System.Threading;
 
 namespace RosSharp.RosBridgeClient.Protocols
 {
     public class WebSocketNetProtocol : IProtocol
     {
-#if !WINDOWS_UWP
+
         private ClientWebSocket clientWebSocket;
         private readonly Uri uri;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -35,63 +33,46 @@ namespace RosSharp.RosBridgeClient.Protocols
         private AutoResetEvent IsReadyToSend = new AutoResetEvent(true);
 
         private const int ReceiveChunkSize = 1024;
-        private const int SendChunkSize = 1024; 
-#endif
+        private const int SendChunkSize = 1024;
 
         public event EventHandler OnReceive;
 
         public WebSocketNetProtocol(string uriString)
         {
-#if !WINDOWS_UWP
             clientWebSocket = new ClientWebSocket();
             uri = new Uri(uriString);
-            cancellationToken = cancellationTokenSource.Token; 
-#endif
+            cancellationToken = cancellationTokenSource.Token;
         }
 
         public void Connect()
         {
-#if !WINDOWS_UWP
             Thread thread = new Thread(() => ConnectAsync());
-            thread.Start(); 
-#endif
+            thread.Start();
         }
 
-#if !WINDOWS_UWP
         public async void ConnectAsync()
         {
             await clientWebSocket.ConnectAsync(uri, cancellationToken);
             IsConnected.Set();
             StartListen();
-        } 
-#endif
+        }
 
         public async void Close()
         {
-#if !WINDOWS_UWP
             await clientWebSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-
-#endif
         }
 
-            public bool IsAlive()
+        public bool IsAlive()
         {
-#if !WINDOWS_UWP
             return clientWebSocket.State == WebSocketState.Open;
-#else
-            return false;
-#endif
         }
 
         public void Send(byte[] message)
         {
-#if !WINDOWS_UWP
             Thread thread = new Thread(() => SendAsync(message));
-            thread.Start(); 
-#endif
+            thread.Start();
         }
 
-#if !WINDOWS_UWP
         public async void SendAsync(byte[] message)
         {
             IsConnected.WaitOne();
@@ -135,9 +116,18 @@ namespace RosSharp.RosBridgeClient.Protocols
 
                 OnReceive.Invoke(this, new MessageEventArgs(memoryStream.ToArray()));
             }
-        } 
-#endif
+        }
     }
-
 }
 
+#else
+
+namespace RosSharp.RosBridgeClient.Protocols
+{
+    public class WebSocketNetProtocol : DummyProtocol, IProtocol
+    {
+        public WebSocketNetProtocol(string uriString) { }
+    }
+}
+
+#endif

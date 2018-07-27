@@ -1,15 +1,26 @@
-﻿#if WINDOWS_UWP
+﻿/*© David Whitney, 2018
+Author: David Whitney (david_whitney@brown.edu)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+<http://www.apache.org/licenses/LICENSE-2.0>.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+#if WINDOWS_UWP
+
 using Windows.Networking.Sockets;
 using Windows.Foundation;
 using Windows.Web;
 using Windows.Storage.Streams;
-#endif
-
 using System.Collections;
 using System.Collections.Generic;
 using System;
-
-using UnityEngine;
 
 
 namespace RosSharp.RosBridgeClient.Protocols
@@ -19,21 +30,16 @@ namespace RosSharp.RosBridgeClient.Protocols
 
         public event EventHandler OnReceive;
 
-#if WINDOWS_UWP
         MessageWebSocket WebSocket;
         Uri Url;
         DataWriter MessageWriter;
-#endif
 
 
         public WebSocketUWPProtocol(string Url)
         {
-#if WINDOWS_UWP
             this.Url = TryGetUri(Url);
             WebSocket = new MessageWebSocket();
             WebSocket.MessageReceived += Receive;
-            Debug.Log("end of constructor");
-#endif
         }
 
         public bool isAlive = false;
@@ -45,9 +51,6 @@ namespace RosSharp.RosBridgeClient.Protocols
 
         public void Connect()
         {
-#if WINDOWS_UWP
-            Debug.Log("begining of connect");
-
             WebSocket.ConnectAsync(this.Url).Completed = (source, status) =>
                 {
                     if (status == AsyncStatus.Completed)
@@ -56,25 +59,20 @@ namespace RosSharp.RosBridgeClient.Protocols
                         isAlive = true;
                     }
                 };
-            Debug.Log("end of connect");
-#endif
         }
 
         public void Close()
         {
-#if WINDOWS_UWP
             if (WebSocket != null)
             {
                 WebSocket.Dispose();
                 WebSocket = null;
                 isAlive = false;
             } 
-#endif
         }
 
         public async void Send(byte[] data)
         {
-#if WINDOWS_UWP
             if (WebSocket != null && MessageWriter != null)
             {
                 try
@@ -87,10 +85,8 @@ namespace RosSharp.RosBridgeClient.Protocols
                     return;
                 }
             } 
-#endif
         }
 
-#if WINDOWS_UWP
         void Receive(MessageWebSocket FromSocket, MessageWebSocketMessageReceivedEventArgs InputMessage)
         {
             try
@@ -110,7 +106,6 @@ namespace RosSharp.RosBridgeClient.Protocols
                 return;
             }
         } 
-#endif
 
         static System.Uri TryGetUri(string uriString)
         {
@@ -131,3 +126,15 @@ namespace RosSharp.RosBridgeClient.Protocols
         }
     }
 };
+
+#else
+
+namespace RosSharp.RosBridgeClient.Protocols
+{
+    public class WebSocketUWPProtocol : DummyProtocol, IProtocol
+    {
+        public WebSocketUWPProtocol(string uriString) { }
+    }
+}
+
+#endif
