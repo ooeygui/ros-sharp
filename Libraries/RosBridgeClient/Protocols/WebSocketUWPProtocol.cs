@@ -34,10 +34,15 @@ namespace RosSharp.RosBridgeClient.Protocols
         DataWriter MessageWriter;
 
 
-        public WebSocketUWPProtocol(string Url)
+        public WebSocketUWPProtocol(string Url, string authorization)
         {
             this.Url = TryGetUri(Url);
             WebSocket = new MessageWebSocket();
+            if (authorization.Length > 0)
+            {
+                WebSocket.SetRequestHeader("Authorization", "Bearer " + authorization);
+            }
+
             WebSocket.Control.MaxMessageSize = uint.MaxValue;
             WebSocket.MessageReceived += WebSocket_MessageReceived;
             WebSocket.Closed += WebSocket_Closed;
