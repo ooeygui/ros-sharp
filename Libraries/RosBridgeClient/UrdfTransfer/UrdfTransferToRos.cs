@@ -110,7 +110,7 @@ namespace RosSharp.RosBridgeClient.UrdfTransfer
                         Uri originalPath = new Uri(xElement.Attribute("filename").Value);
                         xElement.SetAttributeValue("filename", GetNewPackagePath(originalPath));
                     }
-                    catch (UriFormatException e)
+                    catch (UriFormatException)
                     {
 
                     }
